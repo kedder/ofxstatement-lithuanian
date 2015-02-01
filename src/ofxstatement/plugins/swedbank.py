@@ -18,6 +18,7 @@ class SwedbankCsvStatementParser(CsvStatementParser):
                 "payee": 3,
                 "memo": 4,
                 "amount": 5,
+                "currency": 6,
                 "id": 8}
 
     def split_records(self):
@@ -37,8 +38,6 @@ class SwedbankCsvStatementParser(CsvStatementParser):
         parts = [l[1:] for l in line.split('",')]
         if not self.statement.account_id:
             self.statement.account_id = parts[0]
-        if not self.statement.currency:
-            self.statement.currency = parts[6]
 
         lineType = parts[1]
 
@@ -72,4 +71,6 @@ class SwedbankPlugin(Plugin):
 
     def get_parser(self, fin):
         f = open(fin, "r")
-        return SwedbankCsvStatementParser(f)
+        parser = SwedbankCsvStatementParser(f)
+        parser.statement.currency = self.settings.get('currency', 'EUR')
+        return parser
