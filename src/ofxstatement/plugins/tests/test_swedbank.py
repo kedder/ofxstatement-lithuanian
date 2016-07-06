@@ -13,11 +13,12 @@ def doctest_SwedbankCsvStatementParser():
     Create parser object and parse:
         >>> fin = open(csvfile, 'r', encoding='utf-8')
         >>> parser = SwedbankCsvStatementParser(fin)
+        >>> parser.statement.currency = 'LTL'
         >>> statement = parser.parse()
 
     Check what we've got:
         >>> statement.account_id
-        'LT797300010XXXXXXXXX'
+        'LT797300010XXXXXXXXX-LTL'
         >>> len(statement.lines)
         5
         >>> statement.start_balance

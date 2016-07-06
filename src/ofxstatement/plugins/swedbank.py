@@ -18,7 +18,6 @@ class SwedbankCsvStatementParser(CsvStatementParser):
                 "payee": 3,
                 "memo": 4,
                 "amount": 5,
-                "currency": 6,
                 "id": 8}
 
     def split_records(self):
@@ -37,7 +36,8 @@ class SwedbankCsvStatementParser(CsvStatementParser):
         # Split line to the parts and strip quotes around fields
         parts = [l[1:] for l in line.split('",')]
         if not self.statement.account_id:
-            self.statement.account_id = parts[0]
+            self.statement.account_id = \
+                "%s-%s" % (parts[0], self.statement.currency)
 
         lineType = parts[1]
 
@@ -46,6 +46,11 @@ class SwedbankCsvStatementParser(CsvStatementParser):
             stmtline = super(SwedbankCsvStatementParser, self).parse_record(parts)
             if parts[7] == "D":
                 stmtline.amount = -stmtline.amount
+
+            linecur = parts[6]
+            if self.statement.currency != linecur:
+                # Skip lines with different currency
+                return None
 
             m = CARD_PURCHASE_RE.match(stmtline.memo)
             if m:
