@@ -34,7 +34,7 @@ setup(name='ofxstatement-lithuanian',
            'swedbank = ofxstatement.plugins.swedbank:SwedbankPlugin',
            'danske = ofxstatement.plugins.danske:DanskePlugin']
           },
-      install_requires=['ofxstatement'],
+      install_requires=['ofxstatement>=0.6.4'],
       test_suite="ofxstatement.plugins.tests",
       include_package_data=True,
       zip_safe=True

@@ -22,11 +22,11 @@ def doctest_LitasEsisCsvStatementParser():
         >>> len(statement.lines)
         7
         >>> statement.start_balance
-        251.75
+        Decimal('251.75')
         >>> statement.start_date
         datetime.datetime(2012, 1, 1, 0, 0)
         >>> statement.end_balance
-        74.83
+        Decimal('74.83')
         >>> statement.end_date
         datetime.datetime(2012, 3, 4, 0, 0)
         >>> statement.currency
@@ -35,7 +35,7 @@ def doctest_LitasEsisCsvStatementParser():
     Check first line:
         >>> l = statement.lines[0]
         >>> l.amount
-        -1.0
+        Decimal('-1')
         >>> l.payee
         'AB DNB BANKAS'
         >>> l.memo
@@ -46,7 +46,7 @@ def doctest_LitasEsisCsvStatementParser():
     Check credit line:
         >>> l = statement.lines[3]
         >>> l.amount
-        300.0
+        Decimal('300')
         >>> l.payee
         'LINUS TORVALDS'
         >>> l.memo
