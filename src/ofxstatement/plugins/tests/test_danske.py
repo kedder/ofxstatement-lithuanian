@@ -20,9 +20,9 @@ def doctest_DanskeCsvStatementParser():
         >>> len(statement.lines)
         4
         >>> statement.start_balance
-        0.0
+        Decimal('0')
         >>> statement.end_balance
-        0.0
+        Decimal('0.00')
         >>> statement.start_date
         datetime.datetime(2012, 3, 1, 0, 0)
         >>> statement.end_date
@@ -31,19 +31,18 @@ def doctest_DanskeCsvStatementParser():
     First line is a payment for incoming transaction:
         >>> l = statement.lines[0]
         >>> l.amount
-        -7.8
+        Decimal('-7.8')
         >>> l.memo
         'Paslaugų ir komisinių pajamos už gaunamus tarptautinius pervedimus USD'
         >>> l.date
         datetime.datetime(2012, 3, 1, 0, 0)
-        >>> hash_expected = str(abs(hash((l.date,l.memo,l.amount))))
-        >>> l.id == hash_expected
-        True
+        >>> l.id
+        'bef3396a4c86263e911f11a3b10bcc5558064116'
 
     Second line is incoming money
         >>> l = statement.lines[1]
         >>> l.amount
-        889.81
+        Decimal('889.81')
         >>> l.memo
         'ACME LLC'
         >>> l.date
@@ -52,7 +51,7 @@ def doctest_DanskeCsvStatementParser():
     Third line is a pament with amount less than 1 USD
         >>> l = statement.lines[2]
         >>> l.amount
-        -0.46
+        Decimal('-0.46')
         >>> l.memo
         'Mokestis už lėšų, gautų iš kitų LR registruotų bankų, ... 2012.03.06'
 
@@ -61,7 +60,7 @@ def doctest_DanskeCsvStatementParser():
         >>> l.memo
         'John Doe'
         >>> l.amount
-        -881.55
+        Decimal('-881.55')
     """
 
 def test_suite(*args):

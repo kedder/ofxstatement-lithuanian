@@ -22,11 +22,11 @@ def doctest_SwedbankCsvStatementParser():
         >>> len(statement.lines)
         5
         >>> statement.start_balance
-        2123.82
+        Decimal('2123.82')
         >>> statement.start_date
         datetime.datetime(2012, 1, 1, 0, 0)
         >>> statement.end_balance
-        3917.3
+        Decimal('3917.30')
         >>> statement.end_date
         datetime.datetime(2012, 1, 31, 0, 0)
         >>> statement.currency
@@ -35,7 +35,7 @@ def doctest_SwedbankCsvStatementParser():
     Check first line
         >>> l = statement.lines[0]
         >>> l.amount
-        -14.34
+        Decimal('-14.34')
         >>> l.payee
         "McDonald's restoranas AKR Vilnius"
         >>> l.memo
@@ -54,7 +54,7 @@ def doctest_SwedbankCsvStatementParser():
         >>> l.id
         '2012012600096815'
         >>> l.amount
-        -12.2
+        Decimal('-12.20')
         >>> l.payee
         'UAB "Naktida"'
         >>> l.memo
@@ -65,7 +65,7 @@ def doctest_SwedbankCsvStatementParser():
         >>> l.id
         '2012011000673562'
         >>> l.amount
-        1600.0
+        Decimal('1600.00')
         >>> l.payee
         'Company'
         >>> l.memo

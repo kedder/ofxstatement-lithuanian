@@ -1,6 +1,7 @@
 """Parser for LITAS-ESIS csv statement"""
 
 import csv
+from decimal import Decimal
 
 from ofxstatement.parser import CsvStatementParser
 from ofxstatement.plugin import Plugin
@@ -33,8 +34,8 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
                 }
     charset = 'cp1257'
 
-    def parse_float(self, value):
-        return int(value) / 100.0
+    def parse_decimal(self, value):
+        return Decimal(value) / 100
 
     def split_records(self):
         return csv.reader(self.fin, dialect=LitasEsisCsvDialect)
@@ -62,10 +63,10 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
         elif linetype == LINETYPE_SUMMARY:
             summarytype = line[1]
             if summarytype == SUMMARY_START:
-                stmt.start_balance = self.parse_float(line[4])
+                stmt.start_balance = self.parse_decimal(line[4])
                 stmt.start_date = self.parse_datetime(line[2])
             elif summarytype == SUMMARY_END:
-                stmt.end_balance = self.parse_float(line[4])
+                stmt.end_balance = self.parse_decimal(line[4])
                 stmt.end_date = self.parse_datetime(line[2])
             return None
 
