@@ -1,10 +1,11 @@
 """Parser for LITAS-ESIS csv statement"""
-
+from typing import Optional, List, Iterable
 import csv
 from decimal import Decimal
 
 from ofxstatement.parser import CsvStatementParser
 from ofxstatement.plugin import Plugin
+from ofxstatement import statement
 
 LINETIME_HEADER = "000"
 LINETYPE_TRANSACTION = "010"
@@ -14,7 +15,7 @@ SUMMARY_START = "LikutisPR"
 SUMMARY_END = "LikutisPB"
 
 
-class LitasEsisCsvDialect(object):
+class LitasEsisCsvDialect(csv.Dialect):
     delimiter = "\t"
     quotechar = None
     escapechar = None
@@ -35,13 +36,13 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
     }
     charset = "cp1257"
 
-    def parse_decimal(self, value):
+    def parse_decimal(self, value: str) -> Decimal:
         return Decimal(value) / 100
 
-    def split_records(self):
+    def split_records(self) -> Iterable[List[str]]:
         return csv.reader(self.fin, dialect=LitasEsisCsvDialect)
 
-    def parse_record(self, line):
+    def parse_record(self, line: List[str]) -> Optional[statement.StatementLine]:
         # print(line)
 
         linetype = line[0]
@@ -57,7 +58,10 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
         elif linetype == LINETYPE_TRANSACTION:
             # parse transaction line in standard fasion
             stmtline = super(LitasEsisCsvStatementParser, self).parse_record(line)
+            if stmtline is None:
+                return None
             if line[6] == "D":
+                assert stmtline.amount is not None
                 stmtline.amount = -stmtline.amount
             return stmtline
 
@@ -69,9 +73,9 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
             elif summarytype == SUMMARY_END:
                 stmt.end_balance = self.parse_decimal(line[4])
                 stmt.end_date = self.parse_datetime(line[2])
-            return None
+        return None
 
-    def swap_payee_and_memo(self):
+    def swap_payee_and_memo(self) -> None:
         payee, memo = self.mappings["payee"], self.mappings["memo"]
         self.mappings["payee"] = memo
         self.mappings["memo"] = payee
@@ -80,7 +84,7 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
 class LitasEsisPlugin(Plugin):
     """Standard Lithuanian LITAS-ESIS format"""
 
-    def get_parser(self, fin):
+    def get_parser(self, fin: str) -> LitasEsisCsvStatementParser:
         encoding = self.settings.get("charset", "utf-8")
         f = open(fin, "r", encoding=encoding)
         parser = LitasEsisCsvStatementParser(f)

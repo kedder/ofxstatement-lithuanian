@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from ofxstatement.parser import CsvStatementParser
 from ofxstatement.plugin import Plugin
 from ofxstatement import statement
@@ -9,17 +11,19 @@ class DanskeCsvStatementParser(CsvStatementParser):
     mappings = {"date": 0, "memo": 4, "amount": 8}
     date_format = "%Y:%m:%d"
 
-    def parse(self):
+    def parse(self) -> statement.Statement:
         stmt = super(DanskeCsvStatementParser, self).parse()
         statement.recalculate_balance(stmt)
         return stmt
 
-    def parse_record(self, line):
+    def parse_record(self, line: List[str]) -> Optional[statement.StatementLine]:
         if self.cur_record == 1:
             return None
 
         # fill statement line according to mappings
         sl = super(DanskeCsvStatementParser, self).parse_record(line)
+        if sl is None:
+            return None
 
         # generate transaction id out of available data
         sl.id = statement.generate_transaction_id(sl)
@@ -27,14 +31,14 @@ class DanskeCsvStatementParser(CsvStatementParser):
             sl.memo = line[DETAILS_FIELD]
         return sl
 
-    def use_details_for_memo(self):
+    def use_details_for_memo(self) -> None:
         self.mappings["memo"] = DETAILS_FIELD
 
 
 class DanskePlugin(Plugin):
     """Lithuanian Danske bank CSV"""
 
-    def get_parser(self, fin):
+    def get_parser(self, fin: str) -> DanskeCsvStatementParser:
         encoding = self.settings.get("charset", "utf-8")
         f = open(fin, "r", encoding=encoding)
         parser = DanskeCsvStatementParser(f)
