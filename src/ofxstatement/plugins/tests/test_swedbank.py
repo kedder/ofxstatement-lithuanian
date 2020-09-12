@@ -2,6 +2,7 @@ import doctest
 
 from ofxstatement.plugins.swedbank import SwedbankCsvStatementParser
 
+
 def doctest_SwedbankCsvStatementParser():
     """Test SwedbankCsvStatementParser
 
@@ -82,11 +83,15 @@ def doctest_SwedbankCsvStatementParser():
     """
 
 
-
 def test_suite(*args):
-    return doctest.DocTestSuite(optionflags=(doctest.NORMALIZE_WHITESPACE|
-                                             doctest.ELLIPSIS|
-                                             doctest.REPORT_ONLY_FIRST_FAILURE|
-                                             doctest.REPORT_NDIFF
-                                             ))
+    return doctest.DocTestSuite(
+        optionflags=(
+            doctest.NORMALIZE_WHITESPACE
+            | doctest.ELLIPSIS
+            | doctest.REPORT_ONLY_FIRST_FAILURE
+            | doctest.REPORT_NDIFF
+        )
+    )
+
+
 load_tests = test_suite

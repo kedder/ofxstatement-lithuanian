@@ -9,16 +9,11 @@ LINETYPE_TRANSACTION = "20"
 LINETYPE_STARTBALANCE = "10"
 LINETYPE_ENDBALANCE = "86"
 
-CARD_PURCHASE_RE = re.compile(
-    r"PIRKINYS \d+ (\d\d\d\d\.\d\d\.\d\d) .* \((\d+)\).*")
+CARD_PURCHASE_RE = re.compile(r"PIRKINYS \d+ (\d\d\d\d\.\d\d\.\d\d) .* \((\d+)\).*")
 
 
 class SwedbankCsvStatementParser(CsvStatementParser):
-    mappings = {"date": 2,
-                "payee": 3,
-                "memo": 4,
-                "amount": 5,
-                "id": 8}
+    mappings = {"date": 2, "payee": 3, "memo": 4, "amount": 5, "id": 8}
 
     def split_records(self):
         # We cannot parse swedbank csv as regular csv because swedbanks format
@@ -36,8 +31,7 @@ class SwedbankCsvStatementParser(CsvStatementParser):
         # Split line to the parts and strip quotes around fields
         parts = [l[1:] for l in line.split('",')]
         if not self.statement.account_id:
-            self.statement.account_id = \
-                "%s-%s" % (parts[0], self.statement.currency)
+            self.statement.account_id = "%s-%s" % (parts[0], self.statement.currency)
 
         lineType = parts[1]
 
@@ -77,5 +71,5 @@ class SwedbankPlugin(Plugin):
     def get_parser(self, fin):
         f = open(fin, "r")
         parser = SwedbankCsvStatementParser(f)
-        parser.statement.currency = self.settings.get('currency', 'EUR')
+        parser.statement.currency = self.settings.get("currency", "EUR")
         return parser

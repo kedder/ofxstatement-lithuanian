@@ -6,10 +6,7 @@ DETAILS_FIELD = 5
 
 
 class DanskeCsvStatementParser(CsvStatementParser):
-    mappings = {"date": 0,
-                "memo": 4,
-                "amount": 8
-                }
+    mappings = {"date": 0, "memo": 4, "amount": 8}
     date_format = "%Y:%m:%d"
 
     def parse(self):
@@ -31,20 +28,19 @@ class DanskeCsvStatementParser(CsvStatementParser):
         return sl
 
     def use_details_for_memo(self):
-        self.mappings['memo'] = DETAILS_FIELD
+        self.mappings["memo"] = DETAILS_FIELD
 
 
 class DanskePlugin(Plugin):
-    """Lithuanian Danske bank CSV
-    """
+    """Lithuanian Danske bank CSV"""
 
     def get_parser(self, fin):
-        encoding = self.settings.get('charset', 'utf-8')
-        f = open(fin, 'r', encoding=encoding)
+        encoding = self.settings.get("charset", "utf-8")
+        f = open(fin, "r", encoding=encoding)
         parser = DanskeCsvStatementParser(f)
-        parser.statement.currency = self.settings['currency']
-        parser.statement.account_id = self.settings['account']
-        parser.statement.bank_id = self.settings.get('bank', 'Danske')
-        if 'use-details-for-memo' in self.settings:
+        parser.statement.currency = self.settings["currency"]
+        parser.statement.account_id = self.settings["account"]
+        parser.statement.bank_id = self.settings.get("bank", "Danske")
+        if "use-details-for-memo" in self.settings:
             parser.use_details_for_memo()
         return parser

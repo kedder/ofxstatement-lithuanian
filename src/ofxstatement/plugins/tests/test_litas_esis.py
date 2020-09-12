@@ -55,6 +55,8 @@ def doctest_LitasEsisCsvStatementParser():
         '2003969289'
 
     """
+
+
 def doctest_LitasEsisCsvStatementParser_swap_payee_memo():
     """Test ability to swap payee and memo in LitasEsisCsvStatementParser
 
@@ -77,10 +79,16 @@ def doctest_LitasEsisCsvStatementParser_swap_payee_memo():
         'Hello World'
     """
 
+
 def test_suite(*args):
-    return doctest.DocTestSuite(optionflags=(doctest.NORMALIZE_WHITESPACE|
-                                             doctest.ELLIPSIS|
-                                             doctest.REPORT_ONLY_FIRST_FAILURE|
-                                             doctest.REPORT_NDIFF
-                                             ))
+    return doctest.DocTestSuite(
+        optionflags=(
+            doctest.NORMALIZE_WHITESPACE
+            | doctest.ELLIPSIS
+            | doctest.REPORT_ONLY_FIRST_FAILURE
+            | doctest.REPORT_NDIFF
+        )
+    )
+
+
 load_tests = test_suite

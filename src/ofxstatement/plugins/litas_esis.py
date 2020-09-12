@@ -20,19 +20,20 @@ class LitasEsisCsvDialect(object):
     escapechar = None
     doublequote = False
     skipinitialspace = False
-    lineterminator = '\r\n'
+    lineterminator = "\r\n"
     quoting = csv.QUOTE_NONE
 
 
 class LitasEsisCsvStatementParser(CsvStatementParser):
     date_format = "%Y%m%d"
-    mappings = {"date": 2,
-                "amount": 4,
-                "id": 10,
-                "payee": 17,
-                "memo": 13,
-                }
-    charset = 'cp1257'
+    mappings = {
+        "date": 2,
+        "amount": 4,
+        "id": 10,
+        "payee": 17,
+        "memo": 13,
+    }
+    charset = "cp1257"
 
     def parse_decimal(self, value):
         return Decimal(value) / 100
@@ -71,18 +72,18 @@ class LitasEsisCsvStatementParser(CsvStatementParser):
             return None
 
     def swap_payee_and_memo(self):
-        payee, memo = self.mappings['payee'], self.mappings['memo']
-        self.mappings['payee'] = memo
-        self.mappings['memo'] = payee
+        payee, memo = self.mappings["payee"], self.mappings["memo"]
+        self.mappings["payee"] = memo
+        self.mappings["memo"] = payee
 
 
 class LitasEsisPlugin(Plugin):
     """Standard Lithuanian LITAS-ESIS format"""
 
     def get_parser(self, fin):
-        encoding = self.settings.get('charset', 'utf-8')
-        f = open(fin, 'r', encoding=encoding)
+        encoding = self.settings.get("charset", "utf-8")
+        f = open(fin, "r", encoding=encoding)
         parser = LitasEsisCsvStatementParser(f)
-        if 'swap-payee-and-memo' in self.settings:
+        if "swap-payee-and-memo" in self.settings:
             parser.swap_payee_and_memo()
         return parser
