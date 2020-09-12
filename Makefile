@@ -1,7 +1,5 @@
-PYTHON=.venv/bin/python
+all: test
 
-all: PYTHON
-
-PYTHON: setup.py
-	virtualenv -p python3 --no-site-packages .venv
-	$(PYTHON) setup.py develop
+.PHONY: test
+test:
+	pytest
