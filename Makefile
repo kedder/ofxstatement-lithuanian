@@ -1,4 +1,4 @@
-all: test mypy
+all: test mypy black
 
 .PHONY: test
 test:
@@ -7,3 +7,7 @@ test:
 .PHONY: mypy
 mypy:
 	mypy src
+
+.PHONY: black
+black:
+	black src setup.py
