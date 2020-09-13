@@ -37,7 +37,7 @@ setup(
             "danske = ofxstatement.plugins.danske:DanskePlugin",
         ]
     },
-    install_requires=["ofxstatement>=0.6.4"],
+    install_requires=["ofxstatement>=0.7.0"],
     test_suite="ofxstatement.plugins.tests",
     include_package_data=True,
     zip_safe=True,
