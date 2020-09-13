@@ -23,10 +23,10 @@
         },
         "ofxstatement": {
             "hashes": [
-                "sha256:f480615781d7bcf5f15be7ab3bc4ba195bae1b868b5f3bed3ad79a36e7381362"
+                "sha256:2def9267ffc4590888006a6404c8aa83407cb375a44e3bf507a111893d60db58"
             ],
             "index": "pypi",
-            "version": "==0.6.5"
+            "version": "==0.7.0"
         },
         "ofxstatement-lithuanian": {
             "editable": true,
