@@ -19,7 +19,6 @@ class SwedbankCsvStatementParser(CsvStatementParser):
     def split_records(self) -> Iterable[List[str]]:
         # We cannot parse swedbank csv as regular csv because swedbanks format
         # uses unescaped quote symbols.
-        lines = self.fin.readlines()
         for line in self.fin.readlines():
             if not line.strip():
                 yield []
