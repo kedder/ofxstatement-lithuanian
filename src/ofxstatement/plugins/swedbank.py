@@ -22,7 +22,8 @@ class SwedbankCsvStatementParser(CsvStatementParser):
         for line in self.fin.readlines():
             if not line.strip():
                 yield []
-            parts = [l[1:] for l in line.split('",')]
+                continue
+            parts = [p[1:] for p in line.split('",')]
             yield parts
 
     def parse_record(self, line: List[str]) -> Optional[StatementLine]:
