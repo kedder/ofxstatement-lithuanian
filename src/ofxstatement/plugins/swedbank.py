@@ -34,27 +34,26 @@ class SwedbankCsvStatementParser(CsvStatementParser):
             # Skip header line
             return None
 
+        linecur = line[6]
+        if self.statement.currency != linecur:
+            # Skip lines with different currency
+            return None
+
         # Split line to the parts and strip quotes around fields
         # parts = [l[1:] for l in line.split('",')]
-        parts = line
         if not self.statement.account_id:
-            self.statement.account_id = "%s-%s" % (parts[0], self.statement.currency)
+            self.statement.account_id = "%s-%s" % (line[0], self.statement.currency)
 
-        lineType = parts[1]
+        lineType = line[1]
 
         if lineType == LINETYPE_TRANSACTION:
             # parse transaction line in standard fasion
-            stmtline = super().parse_record(parts)
+            stmtline = super().parse_record(line)
             if stmtline is None:
                 return None
-            if parts[7] == "D":
+            if line[7] == "D":
                 assert stmtline.amount is not None
                 stmtline.amount = -stmtline.amount
-
-            linecur = parts[6]
-            if self.statement.currency != linecur:
-                # Skip lines with different currency
-                return None
 
             if stmtline.memo:
                 m = CARD_PURCHASE_RE.match(stmtline.memo)
@@ -68,12 +67,12 @@ class SwedbankCsvStatementParser(CsvStatementParser):
             return stmtline
 
         elif lineType == LINETYPE_ENDBALANCE:
-            self.statement.end_balance = self.parse_float(parts[5])
-            self.statement.end_date = self.parse_datetime(parts[2])
+            self.statement.end_balance = self.parse_float(line[5])
+            self.statement.end_date = self.parse_datetime(line[2])
 
         elif lineType == LINETYPE_STARTBALANCE:
-            self.statement.start_balance = self.parse_float(parts[5])
-            self.statement.start_date = self.parse_datetime(parts[2])
+            self.statement.start_balance = self.parse_float(line[5])
+            self.statement.start_date = self.parse_datetime(line[2])
 
         return None
 
